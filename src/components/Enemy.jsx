@@ -1,18 +1,18 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import React, { useRef, useState } from "react";
 import { useGLTF } from "@react-three/drei";
-import {DoubleSide} from 'three'
+import { DoubleSide } from "three";
 
 const Enemy = ({ bullets, position, onDestroy, id }) => {
   const ref = useRef();
   const { scene } = useThree(); // ✅ Pegamos a cena corretamente
-  const {scene: originalModel} = useGLTF("/models/red-jet.glb")
+  const { scene: originalModel } = useGLTF("/models/red-jet.glb");
 
   const [health, setHealth] = useState(100);
   const [showHealthBar, setShowHealthBar] = useState(false);
   let hideHealthBarTimeout = null;
 
-  const model = originalModel.clone()
+  const model = originalModel.clone();
 
   useFrame(() => {
     if (!ref.current) return;
@@ -33,7 +33,10 @@ const Enemy = ({ bullets, position, onDestroy, id }) => {
           setShowHealthBar(true);
 
           if (hideHealthBarTimeout) clearTimeout(hideHealthBarTimeout);
-          hideHealthBarTimeout = setTimeout(() => setShowHealthBar(false), 3000);
+          hideHealthBarTimeout = setTimeout(
+            () => setShowHealthBar(false),
+            3000
+          );
 
           if (newHealth <= 0) {
             setTimeout(() => {
@@ -57,16 +60,16 @@ const Enemy = ({ bullets, position, onDestroy, id }) => {
   return (
     <group ref={ref} position={position}>
       {/* ✈️ Corpo do inimigo */}
-        <primitive object={model} scale={.35} rotation={[0, -Math.PI/2, 0]}/>
+      <primitive object={model} scale={0.35} rotation={[0, -Math.PI / 2, 0]} />
 
       {/* 🏥 Barra de vida */}
       {showHealthBar && (
         <mesh position={[0, 1.5, 0]}>
           <planeGeometry args={[2, 0.2]} />
-          <meshBasicMaterial color="black" side={DoubleSide}/>
+          <meshBasicMaterial color="black" side={DoubleSide} />
           <mesh position={[-1 + health / 100, 0, 0.01]}>
             <boxGeometry args={[(health / 100) * 2, 0.2, 0.1]} />
-            <meshBasicMaterial color="red" side={DoubleSide}/>
+            <meshBasicMaterial color="red" side={DoubleSide} />
           </mesh>
         </mesh>
       )}
